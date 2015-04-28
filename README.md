@@ -12,6 +12,7 @@ This project aims to provide an easy way to interface with CommandHelper's Metho
 _Credits to_: LadyCailin and all of CommandHelper's contributors.
 
 - [CommandHelper GitHub](https://github.com/sk89q/CommandHelper)
+- [CommandHelper Minecraft Server Abstraction](https://github.com/theoctopod/commandhelper/tree/master/src/main/java/com/laytonsmith/abstraction)
 
 Obviously, CommandHelper and the server API (ex. Bukkit) that loaded it must be loaded.
 
@@ -35,11 +36,11 @@ CommandHelper.eval("msg('hello')", sender);
 
 Compiled MethodScript as a Java Object:
 ```java
-String script = "broadcast('Hello World!')";
+String s = "broadcast('Hello World!')";
 //method A
-MethodScript A = CommandHelper.compile(script);
+MethodScript A = CommandHelper.compile(s);
 //method B
-MethodScript B = new MethodScript(script);
+MethodScript B = new MethodScript(s);
 ```
 
 Execute MethodScript from its Java Object:
@@ -56,6 +57,27 @@ B.execute(new BukkitMCPlayer(bukkitPlayer));
 
 MethodScript environment access
 ------
+Convert MethodScript values into Java values:
+```java
+String s =
+    "@int = 1;" +
+    "@boolean = true;" +
+    "@string = 'string';"
+
+MethodScript script = new MethodScript(script);
+script.execute();
+
+MethodScriptEnvironment env = script.getEnvironment();
+
+Construct cint = script.getVariable("@int");
+Construct cboolean = script.getVariable("@boolean");
+Construct cstring = script.getVariable("@string")
+
+int i = ((CInt)cint).getInt();
+boolean bool = ((CBoolean)cboolean).getBoolean();
+String str = ((CString)cstring).val();
+```
+
 Set variable in MethodScript A (all variable names start with '@'):
 ```java
 MethodScript A = new MethodScript("broadcast(@a)");
