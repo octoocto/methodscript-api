@@ -1,0 +1,27 @@
+sudo: false
+
+language: java
+
+jdk:
+    - oraclejdk8
+
+install: true
+
+script: mvn package
+
+deploy:
+    skip_cleanup: true
+    provider: releases
+    api_key:
+        secure: Tv8gH7hGCj9KVHHYk74CcJGeF87bDo5hB4eBFiqxfLTzQPXrupZCjb/A1aZou25jd4FoHsFKlSCbwNJ9Vh/5WbuSr9xVDk7TPHmELr07F8NCY2nFgT7KP/wV0u5k8LECpRSmQ5Irc9tWe8YzL/oTRL4GXTxFOybAGX34KHZqqDI=
+    file: "target/*.jar"
+    on:
+        tags: true
+        repo: hyperfresh/methodscript-api
+
+notifications:
+    irc:
+        channels:
+            - "irc.esper.net#hyperfresh"
+        on_success: always
+        on_failure: always
