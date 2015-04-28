@@ -1,39 +1,57 @@
-CommandHelper
+MethodScript Unofficial API [![License](https://img.shields.io/github/license/hyperfresh/methodscript-api.svg)](LICENSE.txt) [![Stars](https://img.shields.io/github/stars/hyperfresh/methodscript-api.svg)]()
 ======
-Classes relating to the Minecraft plugin CommandHelper (and its MethodScript language).
-Credits to LadyCailin and the rest of CommandHelper's contributors.
-[CommandHelper Builds](http://builds.enginehub.org/job/commandhelper)
-[CommandHelper GitHub](https://github.com/sk89q/CommandHelper)
+```java
+CommandHelper.eval("broadcast('Hello World!')");
+```
+#### MethodScript implementation made incredibly easy.
 
-Obviously, CommandHelper and whatever API (like Bukkit) that loaded it must be loaded.
+MethodScript is a scripting language created by the Minecraft plugin CommandHelper.
+
+This project aims to provide an easy way to interface with CommandHelper's MethodScript compiler and executor.
+
+_Credits to_: LadyCailin and all of CommandHelper's contributors.
+
+- [CommandHelper GitHub](https://github.com/sk89q/CommandHelper)
+
+Obviously, CommandHelper and the server API (ex. Bukkit) that loaded it must be loaded.
 
 MethodScript evaluation/compiling
 ------
-Evaluate code (statically as console):
+Execute MethodScript (as console):
 ```java
-CommandHelper.eval("broadcast('hello')");
+import com.octopod.msapi.CommandHelper;
+
+CommandHelper.eval("broadcast('Hello World!')");
 ```
 
-Evaluate code (statically as player):
+Execute MethodScript (as player):
 ```java
-CommandHelper.eval("msg('hello')", new BukkitMCPlayer(player));
+import com.octopod.msapi.CommandHelper;
+import com.laytonsmith.abstraction.bukkit.entities.BukkitMCPlayer;
+
+BukkitMCPlayer sender = new BukkitMCPlayer(bukkitPlayer);
+CommandHelper.eval("msg('hello')", sender);
 ```
 
-Execute code (from MethodScript):
+Compiled MethodScript as a Java Object:
 ```java
-MethodScript A = CommandHelper.compile("broadcast('hello')");
+String script = "broadcast('Hello World!')";
+//method A
+MethodScript A = CommandHelper.compile(script);
+//method B
+MethodScript B = new MethodScript(script);
+```
+
+Execute MethodScript from its Java Object:
+```java
+import com.octopod.msapi.CommandHelper;
+import com.octopod.msapi.MethodScript;
+import com.laytonsmith.abstraction.bukkit.entities.BukkitMCPlayer;
+
+MethodScript script = CommandHelper.compile("broadcast('hello')");
+
 A.execute();
-//with player
-MethodScript B = CommandHelper.compile("broadcast('goodbye')");
-B.execute(new BukkitMCPlayer(player));
-```
-
-Compile code:
-```java
-//with static CommandHelper.compile() method:
-MethodScript A = CommandHelper.compile("broadcast('hello')");
-//or using MethodScript's constructor:
-MethodScript B = new MethodScript("broadcast('goodbye')");
+B.execute(new BukkitMCPlayer(bukkitPlayer));
 ```
 
 MethodScript environment access
@@ -44,7 +62,7 @@ MethodScript A = new MethodScript("broadcast(@a)");
 A.getEnvironment().setVariable("@a", new CInt(5, Target.UNKNOWN));
 ```
 
-Set procedure in a MethodScript (all procedure names start with '_'):
+Set procedure in a MethodScript (all procedure names start with '\_'):
 ```java
 MethodScript A = new MethodScript("_something('hello')");
 Procedure proc = CommandHelper.proc("_something", new ArrayList<IVariable>(), "broadcast('hello')");
