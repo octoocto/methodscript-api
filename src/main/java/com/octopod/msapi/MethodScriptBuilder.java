@@ -1,4 +1,4 @@
-package com.octopod.util.commandhelper;
+package com.octopod.msapi;
 
 import com.laytonsmith.core.exceptions.ConfigCompileException;
 import com.laytonsmith.core.exceptions.ConfigCompileGroupException;

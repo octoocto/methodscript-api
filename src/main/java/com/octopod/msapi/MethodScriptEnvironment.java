@@ -1,4 +1,4 @@
-package com.octopod.util.commandhelper;
+package com.octopod.msapi;
 
 import com.laytonsmith.abstraction.MCCommandSender;
 import com.laytonsmith.core.Procedure;
