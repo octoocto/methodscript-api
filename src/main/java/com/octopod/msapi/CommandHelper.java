@@ -1,4 +1,4 @@
-package com.octopod.util.commandhelper;
+package com.octopod.msapi;
 
 import com.laytonsmith.abstraction.MCCommandSender;
 import com.laytonsmith.commandhelper.CommandHelperFileLocations;
@@ -137,7 +137,6 @@ public class CommandHelper
                     plugin.executionQueue,
                     plugin.profiler,
                     plugin.persistenceNetwork,
-                    plugin.permissionsResolver,
                     CommandHelperFileLocations.getDefault().getConfigDirectory(),
                     new Profiles(CommandHelperFileLocations.getDefault().getProfilesFile()),
 					new TaskManager()
