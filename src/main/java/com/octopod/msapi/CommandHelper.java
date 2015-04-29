@@ -137,7 +137,6 @@ public class CommandHelper
                     plugin.executionQueue,
                     plugin.profiler,
                     plugin.persistenceNetwork,
-                    plugin.permissionsResolver,
                     CommandHelperFileLocations.getDefault().getConfigDirectory(),
                     new Profiles(CommandHelperFileLocations.getDefault().getProfilesFile()),
 					new TaskManager()
