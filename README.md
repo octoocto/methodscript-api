@@ -3,7 +3,7 @@ MethodScript Unofficial API [![License](https://img.shields.io/github/license/hy
 ```java
 CommandHelper.eval("broadcast('Hello World!')");
 ```
-#### MethodScript implementation made incredibly easy.
+##### MethodScript implementation made incredibly easy.
 
 MethodScript is a scripting language created by the Minecraft plugin CommandHelper.
 
