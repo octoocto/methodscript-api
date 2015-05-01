@@ -1,4 +1,4 @@
-package com.octopod.msapi;
+package com.octopod.methodscript;
 
 import com.laytonsmith.core.constructs.*;
 
@@ -12,7 +12,11 @@ import java.util.Map;
  */
 public class MScriptVariableList
 {
-	private final IVariableList handle;
+	/**
+	 * The handle of this class.
+	 */
+	public final IVariableList handle;
+
 	private final Target t;
 
 	public MScriptVariableList(IVariableList handle, Target t)
@@ -51,7 +55,7 @@ public class MScriptVariableList
 	 * Clears all cached variables in this environment.
 	 *
 	 */
-	public void clearVariables()
+	public void clear()
 	{
 		handle.keySet().stream().forEach(handle::remove);
 	}
@@ -62,7 +66,7 @@ public class MScriptVariableList
 	 * @param name the name of the variable
 	 * @param c the construct to set the variable to
 	 */
-	public void setVariable(String name, Construct c)
+	public void set(String name, Construct c)
 	{
 		handle.set(new IVariable(CClassType.AUTO, fixVariableName(name), c, t));
 	}
@@ -73,7 +77,7 @@ public class MScriptVariableList
 	 * @param name the name of the variable
 	 * @return the value of the variable
 	 */
-	public Construct getVariable(String name)
+	public Construct get(String name)
 	{
 		name = fixVariableName(name);
 
@@ -88,7 +92,7 @@ public class MScriptVariableList
 	 *
 	 * @param map a map of variable names and constructs
 	 */
-	public void setVariables(Map<String, Construct> map)
+	public void set(Map<String, Construct> map)
 	{
 		map.keySet().stream().forEach(
 				(name) -> handle.set(new IVariable(CClassType.AUTO, fixVariableName(name), map.get(name), t))

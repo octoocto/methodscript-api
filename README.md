@@ -20,14 +20,14 @@ MethodScript evaluation/compiling
 ------
 Execute MethodScript (as console):
 ```java
-import com.octopod.commandhelper.CommandHelper;
+import com.octopod.methodscript.CommandHelper;
 
 CommandHelper.eval("broadcast('Hello World!')");
 ```
 
 Execute MethodScript (as player):
 ```java
-import com.octopod.commandhelper.CommandHelper;
+import com.octopod.methodscript.CommandHelper;
 import com.laytonsmith.abstraction.bukkit.entities.BukkitMCPlayer;
 
 BukkitMCPlayer sender = new BukkitMCPlayer(bukkitPlayer);
@@ -45,8 +45,8 @@ MethodScript B = new MethodScript(s);
 
 Execute MethodScript from its Java Object:
 ```java
-import com.octopod.commandhelper.CommandHelper;
-import com.octopod.commandhelper.MethodScript;
+import com.octopod.methodscript.CommandHelper;
+import com.octopod.methodscript.MethodScript;
 import com.laytonsmith.abstraction.bukkit.entities.BukkitMCPlayer;
 
 MethodScript script = CommandHelper.compile("broadcast('hello')");

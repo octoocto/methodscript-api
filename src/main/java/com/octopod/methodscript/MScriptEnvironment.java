@@ -1,4 +1,4 @@
-package com.octopod.msapi;
+package com.octopod.methodscript;
 
 import com.laytonsmith.abstraction.MCCommandSender;
 import com.laytonsmith.commandhelper.CommandHelperFileLocations;
@@ -80,21 +80,26 @@ public class MScriptEnvironment
 	/**
 	 * The (wrapper) list of variables in this environment.
 	 */
-	private final MScriptVariableList varList;
+	public final MScriptVariableList variables;
 
 	/**
 	 * The (wrapper) list of procedures in this environment.
 	 */
-	private final MScriptProcedureList procList;
+	public final MScriptProcedureList procedures;
 
 	public MScriptEnvironment()
 	{
-		this(newEnvironment(), Target.UNKNOWN);
+		this(newEnvironment(), Target.UNKNOWN, null, null);
+	}
+
+	public MScriptEnvironment(MScriptVariableList variables)
+	{
+		this(newEnvironment(), Target.UNKNOWN, variables, null);
 	}
 
 	public MScriptEnvironment(Target t)
 	{
-		this(newEnvironment(), t);
+		this(newEnvironment(), t, null, null);
 	}
 
 	/**
@@ -105,7 +110,7 @@ public class MScriptEnvironment
 	 */
 	public MScriptEnvironment(Environment env)
 	{
-		this(env, Target.UNKNOWN);
+		this(env, Target.UNKNOWN, null, null);
 	}
 
 	/**
@@ -116,10 +121,23 @@ public class MScriptEnvironment
 	 */
 	public MScriptEnvironment(Environment env, Target t)
 	{
+		this(env, t, null, null);
+	}
+
+	public MScriptEnvironment(Environment env, Target t, MScriptVariableList variables, MScriptProcedureList procedures)
+	{
 		this.env = env;
 		this.t = t;
-		this.varList = new MScriptVariableList(GlobalEnvironment().GetVarList(), t);
-		this.procList = new MScriptProcedureList(GlobalEnvironment().GetProcs());
+		if(variables != null)
+		{
+			GlobalEnvironment().SetVarList(variables.handle);
+		}
+		this.variables = new MScriptVariableList(GlobalEnvironment().GetVarList(), t);
+		if(procedures != null)
+		{
+			GlobalEnvironment().SetProcs(procedures.handle);
+		}
+		this.procedures = new MScriptProcedureList(GlobalEnvironment().GetProcs());
 	}
 
 	/**
@@ -133,8 +151,8 @@ public class MScriptEnvironment
 		{
 			this.env = env.env.clone();
 			this.t = env.t;
-			this.varList = new MScriptVariableList(GlobalEnvironment().GetVarList(), t);
-			this.procList = new MScriptProcedureList(GlobalEnvironment().GetProcs());
+			this.variables = new MScriptVariableList(GlobalEnvironment().GetVarList(), t);
+			this.procedures = new MScriptProcedureList(GlobalEnvironment().GetProcs());
 		}
 		catch(CloneNotSupportedException e)
 		{
@@ -167,7 +185,7 @@ public class MScriptEnvironment
 //	 */
 //	private <T extends EnvironmentImpl> T getModule(Class<T> impl)
 //	{
-//		return env.getEnv(impl);
+//		return environment.getEnv(impl);
 //	}
 //
 //	/**
@@ -177,7 +195,7 @@ public class MScriptEnvironment
 //	 */
 //	private MScriptEnvironment addModule(EnvironmentImpl... impls)
 //	{
-//		env.cloneAndAdd(impls);
+//		environment.cloneAndAdd(impls);
 //		return this;
 //	}
 
@@ -207,25 +225,4 @@ public class MScriptEnvironment
 	{
 		return env.getEnv(GlobalEnv.class);
 	}
-
-	/**
-	 * Gets the variables in this environment.
-	 *
-	 * @return
-	 */
-	public MScriptVariableList variables()
-	{
-		return varList;
-	}
-
-	/**
-	 * Gets the procedures in this environment.
-	 *
-	 * @return
-	 */
-	public MScriptProcedureList procedures()
-	{
-		return procList;
-	}
-
 }

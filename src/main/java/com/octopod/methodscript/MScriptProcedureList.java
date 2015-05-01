@@ -1,4 +1,4 @@
-package com.octopod.msapi;
+package com.octopod.methodscript;
 
 import com.laytonsmith.core.Procedure;
 
@@ -10,7 +10,10 @@ import java.util.Map;
  */
 public class MScriptProcedureList
 {
-	private final Map<String, Procedure> handle;
+	/**
+	 * The handle for this class.
+	 */
+	public final Map<String, Procedure> handle;
 
 	public MScriptProcedureList(Map<String, Procedure> handle)
 	{

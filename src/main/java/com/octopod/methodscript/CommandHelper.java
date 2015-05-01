@@ -1,12 +1,10 @@
-package com.octopod.msapi;
+package com.octopod.methodscript;
 
 import com.laytonsmith.abstraction.MCCommandSender;
 import com.laytonsmith.core.MethodScriptCompiler;
 import com.laytonsmith.core.ParseTree;
 import com.laytonsmith.core.Procedure;
 import com.laytonsmith.core.constructs.*;
-import com.laytonsmith.core.environments.Environment;
-import com.laytonsmith.core.environments.GlobalEnv;
 import com.laytonsmith.core.exceptions.ConfigCompileException;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.exceptions.ConfigCompileGroupException;
@@ -63,29 +61,28 @@ public class CommandHelper
 	/**
 	 * Runs CompiledMethodScript, and returns the resultant Construct.
 	 * May throw ConfigCompileException during the compiling stage.
-	 * @param script The CompiledMethodScript to run.
+	 * @param str The CompiledMethodScript to run.
 	 * @param executor Who this script is going to be executed by.
 	 * @return Construct
 	 * @throws ConfigCompileException
 	 * @throws ConfigRuntimeException
 	 */
-	public static Construct eval(String script, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
+	public static Construct eval(String str, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
 	{
-		return eval(script, null, executor);
+		return eval(str, null, executor);
 	}
 
-	public static Construct eval(String script, MScriptVariableList vars, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
+	public static Construct eval(String str, MScriptVariableList vars, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
 	{
-		MethodScript ms = new MethodScript(script);
+		MScriptEnvironment env = new MScriptEnvironment(vars);
 
-		if(vars != null) {
-			ms.environment().variables().merge(vars);
-		}
+		MethodScript script = new MethodScript(str);
+
 		if(executor != null) {
-			ms.environment().setExecutor(executor);
+			script.environment.setExecutor(executor);
 		}
 
-		return ms.execute();
+		return script.execute();
 	}
 
 	/**
@@ -251,7 +248,7 @@ public class CommandHelper
 	/**
 	 * Converts a Construct into a Java object.
 	 *
-	 * @param construct the commandhelper construct
+	 * @param construct the methodscript construct
 	 * @param type the type to convert to
 	 *
 	 * @return the object matching type
