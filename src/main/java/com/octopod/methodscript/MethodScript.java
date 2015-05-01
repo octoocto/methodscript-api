@@ -139,7 +139,7 @@ public class MethodScript
 		return execute(null, null);
 	}
 
-	public Construct execute(MScriptEnvironment environment)
+	public Construct execute(MSEnvironment environment)
 	{
 		return execute(environment, null);
 	}
@@ -159,11 +159,11 @@ public class MethodScript
 	 *
 	 * @return the Construct that results from this code
 	 */
-	public Construct execute(MScriptEnvironment environment, MethodScriptComplete post)
+	public Construct execute(MSEnvironment environment, MethodScriptComplete post)
 	{
 		if(environment == null)
 		{
-			environment = new MScriptEnvironment();
+			environment = new MSEnvironment();
 		}
 
 		//executes root auto_includes.ms
@@ -177,7 +177,7 @@ public class MethodScript
 	 *
 	 * @return the thread this MethodScript is executing on
 	 */
-	public Thread executeAsync(final MScriptEnvironment environment, final MethodScriptComplete done)
+	public Thread executeAsync(final MSEnvironment environment, final MethodScriptComplete done)
 	{
 		Thread thread = new Thread() {
 			public void run() {execute(environment, done);}

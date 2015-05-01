@@ -8,14 +8,14 @@ import java.util.Map;
 /**
  * A wrapper class for CommandHelper's procedure map.
  */
-public class MScriptProcedureList
+public class MSProcedureList
 {
 	/**
 	 * The handle for this class.
 	 */
 	public final Map<String, Procedure> handle;
 
-	public MScriptProcedureList(Map<String, Procedure> handle)
+	public MSProcedureList(Map<String, Procedure> handle)
 	{
 		this.handle = handle;
 	}

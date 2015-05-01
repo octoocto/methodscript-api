@@ -72,9 +72,9 @@ public class CommandHelper
 		return eval(str, null, executor);
 	}
 
-	public static Construct eval(String str, MScriptVariableList vars, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
+	public static Construct eval(String str, MSVariableList vars, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
 	{
-		MScriptEnvironment env = new MScriptEnvironment(vars);
+		MSEnvironment env = new MSEnvironment(vars);
 
 		MethodScript script = new MethodScript(str);
 

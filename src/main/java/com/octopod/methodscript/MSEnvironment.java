@@ -21,7 +21,7 @@ import java.io.IOException;
  * A Target is paired with the Environment for getting variables/procedures and such.
  * If no Target is given, Target.UNKNOWN will be used.
  */
-public class MScriptEnvironment
+public class MSEnvironment
 {
 	private static Environment defaultEnvironment = null;
 
@@ -80,24 +80,24 @@ public class MScriptEnvironment
 	/**
 	 * The (wrapper) list of variables in this environment.
 	 */
-	public final MScriptVariableList variables;
+	public final MSVariableList variables;
 
 	/**
 	 * The (wrapper) list of procedures in this environment.
 	 */
-	public final MScriptProcedureList procedures;
+	public final MSProcedureList procedures;
 
-	public MScriptEnvironment()
+	public MSEnvironment()
 	{
 		this(newEnvironment(), Target.UNKNOWN, null, null);
 	}
 
-	public MScriptEnvironment(MScriptVariableList variables)
+	public MSEnvironment(MSVariableList variables)
 	{
 		this(newEnvironment(), Target.UNKNOWN, variables, null);
 	}
 
-	public MScriptEnvironment(Target t)
+	public MSEnvironment(Target t)
 	{
 		this(newEnvironment(), t, null, null);
 	}
@@ -108,7 +108,7 @@ public class MScriptEnvironment
 	 *
 	 * @param env the environment
 	 */
-	public MScriptEnvironment(Environment env)
+	public MSEnvironment(Environment env)
 	{
 		this(env, Target.UNKNOWN, null, null);
 	}
@@ -119,12 +119,12 @@ public class MScriptEnvironment
 	 * @param env the environment
 	 * @param t the target to use
 	 */
-	public MScriptEnvironment(Environment env, Target t)
+	public MSEnvironment(Environment env, Target t)
 	{
 		this(env, t, null, null);
 	}
 
-	public MScriptEnvironment(Environment env, Target t, MScriptVariableList variables, MScriptProcedureList procedures)
+	public MSEnvironment(Environment env, Target t, MSVariableList variables, MSProcedureList procedures)
 	{
 		this.env = env;
 		this.t = t;
@@ -132,12 +132,12 @@ public class MScriptEnvironment
 		{
 			GlobalEnvironment().SetVarList(variables.handle);
 		}
-		this.variables = new MScriptVariableList(GlobalEnvironment().GetVarList(), t);
+		this.variables = new MSVariableList(GlobalEnvironment().GetVarList(), t);
 		if(procedures != null)
 		{
 			GlobalEnvironment().SetProcs(procedures.handle);
 		}
-		this.procedures = new MScriptProcedureList(GlobalEnvironment().GetProcs());
+		this.procedures = new MSProcedureList(GlobalEnvironment().GetProcs());
 	}
 
 	/**
@@ -145,14 +145,14 @@ public class MScriptEnvironment
 	 *
 	 * @param env the original environment
 	 */
-	public MScriptEnvironment(MScriptEnvironment env)
+	public MSEnvironment(MSEnvironment env)
 	{
 		try
 		{
 			this.env = env.env.clone();
 			this.t = env.t;
-			this.variables = new MScriptVariableList(GlobalEnvironment().GetVarList(), t);
-			this.procedures = new MScriptProcedureList(GlobalEnvironment().GetProcs());
+			this.variables = new MSVariableList(GlobalEnvironment().GetVarList(), t);
+			this.procedures = new MSProcedureList(GlobalEnvironment().GetProcs());
 		}
 		catch(CloneNotSupportedException e)
 		{
@@ -160,7 +160,7 @@ public class MScriptEnvironment
 		}
 	}
 
-	public MScriptEnvironment setExecutor(MCCommandSender executor)
+	public MSEnvironment setExecutor(MCCommandSender executor)
 	{
 		CommandHelperEnvironment().SetCommandSender(executor);
 		return this;

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * A wrapper for the IVariableList object.
  */
-public class MScriptVariableList
+public class MSVariableList
 {
 	/**
 	 * The handle of this class.
@@ -19,13 +19,13 @@ public class MScriptVariableList
 
 	private final Target t;
 
-	public MScriptVariableList(IVariableList handle, Target t)
+	public MSVariableList(IVariableList handle, Target t)
 	{
 		this.handle = handle;
 		this.t = t;
 	}
 
-	public MScriptVariableList()
+	public MSVariableList()
 	{
 		this.handle = new IVariableList();
 		this.t = Target.UNKNOWN;
@@ -46,7 +46,7 @@ public class MScriptVariableList
 		return str;
 	}
 
-	public void merge(MScriptVariableList other)
+	public void merge(MSVariableList other)
 	{
 		other.toList().stream().forEach(handle::set);
 	}
