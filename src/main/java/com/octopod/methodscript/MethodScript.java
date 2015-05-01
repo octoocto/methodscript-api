@@ -1,13 +1,10 @@
 package com.octopod.methodscript;
 
-import com.laytonsmith.abstraction.MCCommandSender;
 import com.laytonsmith.core.MethodScriptCompiler;
 import com.laytonsmith.core.MethodScriptComplete;
 import com.laytonsmith.core.ParseTree;
 import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
-import com.laytonsmith.core.environments.CommandHelperEnvironment;
-import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.ConfigCompileException;
 import com.laytonsmith.core.exceptions.ConfigCompileGroupException;
 
@@ -21,24 +18,19 @@ import java.io.IOException;
  */
 
 /**
- * An object representing the compiled MethodScript.
+ * Represents the compiled MethodScript.
  */
 public class MethodScript
 {
 	/**
-	 * The environment that the script will use.
-	 */
-	public final MScriptEnvironment environment;
-
-	/**
-	 * If false, a clone of the original environment will be used instead of the environment directly.
-	 */
-	private boolean saveState = true;
-
-	/**
 	 * The compiled MethodScript.
 	 */
-	private final ParseTree compiled;
+	private final ParseTree parseTree;
+
+	/**
+	 * The Target representing where the source of the script is.
+	 */
+	private final Target source;
 
 	/**
 	 * Compiles MethodScript from a string.
@@ -47,68 +39,77 @@ public class MethodScript
 	 * @throws ConfigCompileException
 	 * @throws ConfigCompileGroupException
 	 */
-	public MethodScript(String str) throws ConfigCompileException, ConfigCompileGroupException
+	public MethodScript(String str)
+			throws ConfigCompileException, ConfigCompileGroupException
 	{
-		this(str, null, null, false);
+		this(str, false);
 	}
 
 	/**
-	 * Compiles MethodScript from a string with an environment.
+	 * Compiles MethodScript from a string.
 	 *
-	 * @param script the script to compile
-	 * @param environment the environment to use
-	 * @return the compiled script
-	 *
+	 * @param str the script to compile
 	 * @throws ConfigCompileException
 	 * @throws ConfigCompileGroupException
 	 */
-	@Deprecated
-	public MethodScript(String script, Environment environment) throws ConfigCompileException, ConfigCompileGroupException
+	public MethodScript(String str, boolean autorun)
+			throws ConfigCompileException, ConfigCompileGroupException
 	{
-		this(script, null, new MScriptEnvironment(environment), false);
+		this(str, null, autorun);
 	}
 
-	public MethodScript(String script, MScriptEnvironment environment) throws ConfigCompileException, ConfigCompileGroupException
+	/**
+	 * Compiles MethodScript from a file.
+	 *
+	 * @param file
+	 * @throws ConfigCompileException
+	 * @throws ConfigCompileGroupException
+	 * @throws IOException
+	 */
+	public MethodScript(File file)
+			throws ConfigCompileException, ConfigCompileGroupException, IOException
 	{
-		this(script, null, environment, false);
+		this(file, false);
 	}
 
-	public MethodScript(String script, File source, MScriptEnvironment environment, boolean autorun)
+	/**
+	 * Compiles MethodScript from a file.
+	 *
+	 * @param file
+	 * @throws ConfigCompileException
+	 * @throws ConfigCompileGroupException
+	 * @throws IOException
+	 */
+	public MethodScript(File file, boolean autorun)
+			throws ConfigCompileException, ConfigCompileGroupException, IOException
+	{
+		this(read(file), file, autorun);
+	}
+
+	private MethodScript(String str, File file, boolean autorun)
 			throws ConfigCompileException, ConfigCompileGroupException
 	{
 		//Sets the source to UNKNOWN if null
-		if (source == null)
+		if (file == null)
 		{
-			source = Target.UNKNOWN.file();
+			file = Target.UNKNOWN.file();
 		}
 
-		this.compiled = MethodScriptCompiler.compile(MethodScriptCompiler.lex(script, source, true));
+		this.parseTree = MethodScriptCompiler.compile(MethodScriptCompiler.lex(str, file, true));
 		Target t;
 		try
 		{
 			//The IDE thinks this might throw an NPE?
-			t = this.compiled.getTarget();
+			t = this.parseTree.getTarget();
 		}
 		catch(NullPointerException e)
 		{
 			t = Target.UNKNOWN;
 		}
 
-		//Sets the environment to a default environment if null
-		if (environment == null)
-		{
-			environment = new MScriptEnvironment(t);
-		}
-
-		this.environment = environment;
+		this.source = t;
 
 		if(autorun) execute();
-	}
-
-	public MethodScript(MethodScript other, MScriptEnvironment environment)
-	{
-		this.compiled = other.compiled;
-		this.environment = other.environment;
 	}
 
 	private static String read(File file) throws IOException
@@ -128,19 +129,9 @@ public class MethodScript
 		return sb.toString();
 	}
 
-	public void setSaveState(boolean b)
-	{
-		this.saveState = b;
-	}
-
 	public String getSource()
 	{
-		return getTarget().file().toString();
-	}
-
-	public Target getTarget()
-	{
-		return compiled.getTarget();
+		return source.file().toString();
 	}
 
 	public Construct execute()
@@ -148,47 +139,48 @@ public class MethodScript
 		return execute(null, null);
 	}
 
-	public Construct execute(MCCommandSender executor)
+	public Construct execute(MScriptEnvironment environment)
 	{
-		return execute(null, executor);
+		return execute(environment, null);
 	}
 
-	public Construct execute(MethodScriptComplete done)
+	public Construct execute(MethodScriptComplete post)
 	{
-		return execute(done, null);
+		return execute(null, post);
 	}
 
 	/**
-	 * Executes this code.
+	 * Executes this MethodScript.
+	 * If <code>environment</code> is null, a new one will be created, which may be
+	 * desirable if you intend to not access the environment after executing it.
+	 * If <code>done</code> isn't null, it will be executed after the MethodScript execution.
 	 *
-	 * @param done this will run after the code is done, can be null
+	 * @param post this will run after the code is done, can be null
 	 *
 	 * @return the Construct that results from this code
 	 */
-	public Construct execute(MethodScriptComplete done, MCCommandSender executor)
+	public Construct execute(MScriptEnvironment environment, MethodScriptComplete post)
 	{
-		Environment env;
-		if(saveState)
-			//Use our environment
-			env = this.environment.getHandle();
-		else
-			//Clone the Environment
-			env = new MScriptEnvironment(this.environment).getHandle();
-
-		if(executor != null)
+		if(environment == null)
 		{
-			env.getEnv(CommandHelperEnvironment.class).SetCommandSender(executor);
+			environment = new MScriptEnvironment();
 		}
 
-		MethodScriptCompiler.registerAutoIncludes(this.environment.getHandle(), null);
+		//executes root auto_includes.ms
+		MethodScriptCompiler.registerAutoIncludes(environment.getHandle(), null);
 
-		return MethodScriptCompiler.execute(compiled, env, done, null);
+		return MethodScriptCompiler.execute(parseTree, environment.getHandle(), post, null);
 	}
 
-	public Thread executeAsync(final MethodScriptComplete done)
+	/**
+	 * Executes this MethodScript on a different thread.
+	 *
+	 * @return the thread this MethodScript is executing on
+	 */
+	public Thread executeAsync(final MScriptEnvironment environment, final MethodScriptComplete done)
 	{
 		Thread thread = new Thread() {
-			public void run() {execute(done);}
+			public void run() {execute(environment, done);}
 		};
 		thread.start();
 		return thread;
@@ -196,6 +188,6 @@ public class MethodScript
 
 	public Thread executeAsync()
 	{
-		return executeAsync(null);
+		return executeAsync(null, null);
 	}
 }
