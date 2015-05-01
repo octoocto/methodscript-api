@@ -18,15 +18,27 @@ import java.util.Map;
  * @author Octopod
  *         Created on 5/24/14
  */
+
+/**
+ * A library of static methods relating to CommandHelper and MethodScript.
+ */
 public class CommandHelper
 {
-	public static ParseTree parse(String script) throws ConfigCompileException, ConfigCompileGroupException
+	/**
+	 * Compiles a string into a ParseTree.
+	 *
+	 * @param script
+	 * @return
+	 * @throws ConfigCompileException
+	 * @throws ConfigCompileGroupException
+	 */
+	public static ParseTree compileRaw(String script) throws ConfigCompileException, ConfigCompileGroupException
 	{
 		return MethodScriptCompiler.compile(MethodScriptCompiler.lex(script, Target.UNKNOWN.file(), true));
 	}
 
 	/**
-	 * Compiles MethodScript from a string.
+	 * Compiles a string into a MethodScript.
 	 *
 	 * @param script the script to compile
 	 * @return the compiled script
@@ -39,50 +51,48 @@ public class CommandHelper
 		return new MethodScript(script);
 	}
 
-	/**
-	 * Runs CompiledMethodScript, and returns the resultant Construct. (as the console by default)
-	 * May throw ConfigCompileException during the compiling stage.
-	 *
-	 * @param script The CompiledMethodScript to run.
-	 * @return Construct
-	 *
-	 * @throws ConfigCompileException
-	 */
-	public static Construct eval(String script) throws ConfigCompileException, ConfigCompileGroupException
-	{
-		return eval(script, null, null);
-	}
-
 	public static Procedure proc(String name, List<IVariable> vars, String script) throws ConfigCompileException, ConfigCompileGroupException
 	{
-		return new Procedure(name, CClassType.AUTO, vars, parse(script), Target.UNKNOWN);
+		return new Procedure(name, CClassType.AUTO, vars, compileRaw(script), Target.UNKNOWN);
 	}
 
 	/**
-	 * Runs CompiledMethodScript, and returns the resultant Construct.
-	 * May throw ConfigCompileException during the compiling stage.
-	 * @param str The CompiledMethodScript to run.
-	 * @param executor Who this script is going to be executed by.
+	 * Shorthand for compiling a string MethodScript,
+	 * then executing it using a new MSEnvironment.
+	 * Returns a Construct, which is the base object for all MethodScript datatypes.
+	 *
+	 * @param str the string to evaluate
 	 * @return Construct
+	 *
 	 * @throws ConfigCompileException
-	 * @throws ConfigRuntimeException
 	 */
-	public static Construct eval(String str, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
+	public static Construct eval(String str) throws ConfigCompileException, ConfigCompileGroupException
 	{
-		return eval(str, null, executor);
+		return eval(str, null);
 	}
 
-	public static Construct eval(String str, MSVariableList vars, MCCommandSender executor) throws ConfigCompileException, ConfigCompileGroupException
+	/**
+	 * Shorthand for compiling a string MethodScript,
+	 * using a provided MSEnvironment or creating a new one,
+	 * then executing the MethodScript using it.
+	 * Returns a Construct, which is the base object for all MethodScript datatypes.
+	 *
+	 * @param str the string to evaluate
+	 * @param environment the environment to use, or null
+	 * @return Construct
+	 * @throws ConfigCompileException
+	 * @throws ConfigCompileGroupException
+	 */
+	public static Construct eval(String str, MSEnvironment environment) throws ConfigCompileException, ConfigCompileGroupException
 	{
-		MSEnvironment env = new MSEnvironment(vars);
+		if(environment == null)
+		{
+			environment = new MSEnvironment();
+		}
 
 		MethodScript script = new MethodScript(str);
 
-		if(executor != null) {
-			script.environment.setExecutor(executor);
-		}
-
-		return script.execute();
+		return script.execute(environment);
 	}
 
 	/**
