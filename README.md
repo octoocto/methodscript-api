@@ -1,4 +1,4 @@
-MethodScript Unofficial API [![License](https://img.shields.io/github/license/hyperfresh/methodscript-api.svg)](LICENSE.txt) [![Stars](https://img.shields.io/github/stars/hyperfresh/methodscript-api.svg)]()
+MethodScript Unofficial API [![License][1]](LICENSE.txt) ![Stars][2]
 ======
 ```java
 CommandHelper.eval("broadcast('Hello World!')");
@@ -20,14 +20,14 @@ MethodScript evaluation/compiling
 ------
 Execute MethodScript (as console):
 ```java
-import com.octopod.msapi.CommandHelper;
+import com.octopod.commandhelper.CommandHelper;
 
 CommandHelper.eval("broadcast('Hello World!')");
 ```
 
 Execute MethodScript (as player):
 ```java
-import com.octopod.msapi.CommandHelper;
+import com.octopod.commandhelper.CommandHelper;
 import com.laytonsmith.abstraction.bukkit.entities.BukkitMCPlayer;
 
 BukkitMCPlayer sender = new BukkitMCPlayer(bukkitPlayer);
@@ -45,8 +45,8 @@ MethodScript B = new MethodScript(s);
 
 Execute MethodScript from its Java Object:
 ```java
-import com.octopod.msapi.CommandHelper;
-import com.octopod.msapi.MethodScript;
+import com.octopod.commandhelper.CommandHelper;
+import com.octopod.commandhelper.MethodScript;
 import com.laytonsmith.abstraction.bukkit.entities.BukkitMCPlayer;
 
 MethodScript script = CommandHelper.compile("broadcast('hello')");
@@ -67,7 +67,7 @@ String s =
 MethodScript script = new MethodScript(script);
 script.execute();
 
-MethodScriptEnvironment env = script.getEnvironment();
+MethodScriptEnvironment environment = script.getEnvironment();
 
 Construct cint = script.getVariable("@int");
 Construct cboolean = script.getVariable("@boolean");
@@ -80,8 +80,9 @@ String str = ((CString)cstring).val();
 
 Set variable in MethodScript A (all variable names start with '@'):
 ```java
-MethodScript A = new MethodScript("broadcast(@a)");
-A.getEnvironment().setVariable("@a", new CInt(5, Target.UNKNOWN));
+MethodScript mscript = new MethodScript("broadcast(@a)");
+
+mscript.environment.variables.set("@a", new CInt(5, Target.UNKNOWN));
 ```
 
 Set procedure in a MethodScript (all procedure names start with '\_'):
@@ -106,3 +107,9 @@ MethodScript B = new MethodScript("_hello()");
 A.execute();
 B.include(A.getEnvironment().getProcedures());
 ```
+
+<!--- GitHub License Badge --->
+[1]: https://img.shields.io/github/license/hyperfresh/methodscript-api.svg
+
+<!--- GitHub Star Count Badge --->
+[2]: https://img.shields.io/github/stars/hyperfresh/methodscript-api.svg
