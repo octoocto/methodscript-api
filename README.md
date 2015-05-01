@@ -4,7 +4,7 @@ MethodScript U(nofficial)API [![License][1]](LICENSE.txt) ![Stars][2]
 CommandHelper.eval("print('Hello World!')");
 ```
 ##### MethodScript implementation made incredibly easy.
-- [MethodScript UAPI Documentation](3)
+- [MethodScript UAPI Documentation][3]
 
 MethodScript is a scripting language created by the Minecraft plugin CommandHelper.
 
@@ -16,7 +16,7 @@ _Credits to_: LadyCailin and all of CommandHelper's contributors.
 
 Obviously, CommandHelper and the server API (ex. Bukkit) that loaded it must be loaded.
 
-[3]: docs/README.md
+[3]: ../blob/master/docs/README.md
 
 <!--- GitHub License Badge --->
 [1]: https://img.shields.io/github/license/hyperfresh/methodscript-api.svg
