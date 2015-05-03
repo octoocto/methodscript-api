@@ -118,7 +118,7 @@ int i = ((CInt)env.variables.get("@i")).getInt();
 [1]: https://github.com/sk89q/CommandHelper
 
 <!--- laytonsmith/abstraction --->
-[2]: https://github.com/theoctopod/commandhelper/tree/master/src/main/java/com/laytonsmith/abstraction
+[2]: https://github.com/sk89q/CommandHelper/tree/master/src/main/java/com/laytonsmith/abstraction
 
 <!--- laytonsmith/constructs --->
-[3]: https://github.com/theoctopod/commandhelper/tree/master/src/main/java/com/laytonsmith/constructs
+[3]: https://github.com/sk89q/CommandHelper/tree/master/src/main/java/com/laytonsmith/core/constructs
